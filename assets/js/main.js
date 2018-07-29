@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(document).on("click", ".buyOneTicket, .increment, #tixBuy, #tixReinvest", function () {
+    $(document).on("click", ".buyOneTicket, #tixBuy, #tixReinvest", function () {
         if (typeof web3 === 'undefined') {
             $('#loading').modal({
                 //  backdrop: 'static',
@@ -8,13 +8,14 @@ $(document).ready(function () {
         }
         else {
             web3.eth.getAccounts(function (err, accounts) {
-                if (err != null) console.error("An error occurred: " + err);
+                if (err != null)
+                    console.error("An error occurred: " + err);
                 else if (accounts.length == 0) {
-                    // console.log("User is not logged in to MetaMask");
-                    // $('#loading2').modal({
-                    //     // backdrop: 'static',
-                    //     // keyboard: false
-                    // });  
+                    console.log("User is not logged in to MetaMask");
+                    $('#loading2').modal({
+                        // backdrop: 'static',
+                        // keyboard: false
+                    });  
                 }
                 else
                     console.log("User is logged in to MetaMask");
