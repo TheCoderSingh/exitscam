@@ -15,7 +15,7 @@ $(document).ready(function () {
                     $('#loading2').modal({
                         // backdrop: 'static',
                         // keyboard: false
-                    });  
+                    });
                 }
                 else
                     console.log("User is logged in to MetaMask");
@@ -77,41 +77,42 @@ $(document).ready(function () {
             $('.tutorial').show();
     })
 
-    var countDownDate = new Date("Sep 5, 2018 14:39:25").getTime();
+    // var countDownDate = new Date("Sep 5, 2018 14:39:25").getTime();
+    // console.log(countDownDate);
 
-    // Update the count down every 1 second
-    var x = setInterval(function () {
+    // // Update the count down every 1 second
+    // var x = setInterval(function () {
 
-        // Get todays date and time
-        var now = new Date().getTime();
+    //     // Get todays date and time
+    //     var now = new Date().getTime();
 
-        // Find the distance between now an the count down date
-        var distance = countDownDate - now;
+    //     // Find the distance between now an the count down date
+    //     var distance = countDownDate - now;
 
-        // Time calculations for days, hours, minutes and seconds
-        // var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    //     // Time calculations for days, hours, minutes and seconds
+    //     // var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    //     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    //     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    //     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Output the result in an element with id="demo"
-        if (hours / 10 < 1)
-            hours = '0' + hours;
+    //     // Output the result in an element with id="demo"
+    //     if (hours / 10 < 1)
+    //         hours = '0' + hours;
 
-        if (minutes / 10 < 1)
-            minutes = '0' + minutes;
+    //     if (minutes / 10 < 1)
+    //         minutes = '0' + minutes;
 
-        if (seconds / 10 < 1)
-            seconds = '0' + seconds;
+    //     if (seconds / 10 < 1)
+    //         seconds = '0' + seconds;
 
-        $('.headtimer, .boxtimer').html(hours + ":" + minutes + ":" + seconds);
+    //     $('.headtimer, .boxtimer').html(hours + ":" + minutes + ":" + seconds);
 
-        // If the count down is over, write some text 
-        if (distance < 0) {
-            clearInterval(x);
-            $('.headtimer').html("EXPIRED");
-        }
-    }, 1000);
+    //     // If the count down is over, write some text 
+    //     if (distance < 0) {
+    //         clearInterval(x);
+    //         $('.headtimer, .boxtimer').html("EXPIRED");
+    //     }
+    // }, 1000);
 
     this.web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
@@ -121,7 +122,7 @@ $(document).ready(function () {
         console.log(amount);
         const wei = web3.toWei(amount, 'ether');
         let account = web3.eth.accounts[0];
-
+        console.log(account);
         if (!account) {
             return console.log('Cannot add money without an account.');
         }
@@ -137,5 +138,81 @@ $(document).ready(function () {
 
             console.log('Money added!');
         })
-    })
+    });
+
+    setInterval(function () {
+        content = $("#titleeth").html();
+        console.log(content);
+        $("#sideglitch").html(content);
+    }, 1000);
+
+    setInterval(function () {
+        $(document).on("input", "#tixToBuy", function () {
+            newval = $('#tixToBuy').val().replace(' Key', '');
+            newval = eval(newval) + 10;
+            newQuotation = newval * 0.00547450;
+
+            $('#tixQuotation').html('@ ' + newQuotation + ' ETH');
+        });
+    });
+
+    let randMinutes = [55, 56, 57, 58];
+
+    var rand = randMinutes[Math.floor(Math.random() * randMinutes.length)];
+
+    console.log(rand);
+
+    // function startTimer(duration, display) {
+        // var timer = duration, hours, minutes, seconds;
+        hours=23;
+        minutes=59;
+        seconds=59;
+        setInterval(function () {
+
+            console.log(minutes+':'+ rand + '::');
+            if (minutes <= rand) {
+                minutes += 1;
+                seconds = 30;
+                rand = randMinutes[Math.floor(Math.random() * randMinutes.length)];
+                console.log(rand);
+            }
+
+            if (minutes > 59 && hours != 24)
+                minutes = 59;
+            else if (minutes > 59 && hours == 24)
+                minutes = 0;
+            
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display = $('.headtimer , .boxtimer');
+            display.text(hours + ":" + minutes + ":" + seconds);
+
+
+            if(minutes==0)
+            {
+                hours--;
+                minutes=59;
+                seconds=0;
+            }
+            else if(seconds==0)
+            {
+                seconds=59;
+                minutes--;
+                
+            }
+            else
+            {
+                seconds--;
+            }
+        }, 1000);
+    // }
+
+    // jQuery(function ($) {
+    //     var tfh = 24 * 60 * 60,
+    //         display = $('.headtimer , .boxtimer');
+    //     startTimer(tfh, display);
+    // });
+
 });
