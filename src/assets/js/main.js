@@ -114,31 +114,34 @@ $(document).ready(function () {
     //     }
     // }, 1000);
 
-    this.web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
-    $(document).on("click", "#tixBuy", function () {
-        amount = $('#tixQuotation').html().replace('@ ', '');
-        amount = amount.replace(' ETH', '');
-        console.log(amount);
-        const wei = web3.toWei(amount, 'ether');
-        let account = web3.eth.accounts[0];
-        console.log(account);
-        if (!account) {
-            return console.log('Cannot add money without an account.');
-        }
+    if (typeof web3 != 'undefined') {
+        this.web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
-        web3.eth.sendTransaction({
-            to: account,
-            from: account,
-            value: wei
-        }, (err, txHash) => {
-            if (err) {
-                console.log(err.message);
+        $(document).on("click", "#tixBuy", function () {
+            amount = $('#tixQuotation').html().replace('@ ', '');
+            amount = amount.replace(' ETH', '');
+            console.log(amount);
+            const wei = web3.toWei(amount, 'ether');
+            let account = web3.eth.accounts[0];
+            console.log(account);
+            if (!account) {
+                return console.log('Cannot add money without an account.');
             }
 
-            console.log('Money added!');
-        })
-    });
+            web3.eth.sendTransaction({
+                to: account,
+                from: account,
+                value: wei
+            }, (err, txHash) => {
+                if (err) {
+                    console.log(err.message);
+                }
+
+                console.log('Money added!');
+            })
+        });
+    }
 
     setInterval(function () {
         content = $("#titleeth").html();
@@ -146,15 +149,55 @@ $(document).ready(function () {
         $("#sideglitch").html(content);
     }, 1000);
 
-    setInterval(function () {
-        $(document).on("input", "#tixToBuy", function () {
-            newval = $('#tixToBuy').val().replace(' Key', '');
-            newval = eval(newval) + 10;
-            newQuotation = newval * 0.00547450;
+    // setInterval(function () {
+    //     $(document).on("change", function () {
+    //         newval = $('#tixToBuy').val().replace(' Key', '');
+    //         newval = eval(newval) + 10;
+    //         newQuotation = newval * 0.00547450;
 
-            $('#tixQuotation').html('@ ' + newQuotation + ' ETH');
+    //         $('#tixQuotation').html('@ ' + newQuotation + ' ETH');
+    //     });
+    // });
+
+    jQuery.fn.forceNumeric = function () {
+        return this.each(function () {
+            $(this).keydown(function (e) {
+                var key = e.which || e.keyCode;
+
+                if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
+                    // numbers   
+                    key >= 48 && key <= 57 ||
+                    // Numeric keypad
+                    key >= 96 && key <= 105 ||
+                    // comma, period and minus, . on keypad
+                    key == 190 || key == 188 || key == 109 || key == 110 ||
+                    // Backspace and Tab and Enter
+                    key == 8 || key == 9 || key == 13 ||
+                    // Home and End
+                    key == 35 || key == 36 ||
+                    // left and right arrows
+                    key == 37 || key == 39 ||
+                    // Del and Ins
+                    key == 46 || key == 45)
+                    return true;
+
+                return false;
+            });
         });
+    };
+
+    $("#tixToBuy").forceNumeric();
+
+    $("#tixToBuy").keyup(function () {
+        newval = $('#tixToBuy').val().replace(' Key', '');
+        newQuotation = newval * 0.00547450;
+
+
+        $('#tixToBuy').val(newval + ' Key');
+
+        $('#tixQuotation').html('@ ' + newQuotation + ' ETH');
     });
+
 
     let randMinutes = [55, 56, 57, 58];
 
@@ -163,50 +206,47 @@ $(document).ready(function () {
     console.log(rand);
 
     // function startTimer(duration, display) {
-        // var timer = duration, hours, minutes, seconds;
-        hours=23;
-        minutes=59;
-        seconds=59;
-        setInterval(function () {
+    // var timer = duration, hours, minutes, seconds;
+    hours = 23;
+    minutes = 59;
+    seconds = 59;
+    setInterval(function () {
 
-            console.log(minutes+':'+ rand + '::');
-            if (minutes <= rand) {
-                minutes += 1;
-                seconds = 30;
-                rand = randMinutes[Math.floor(Math.random() * randMinutes.length)];
-                console.log(rand);
-            }
+        console.log(minutes + ':' + rand + '::');
+        if (minutes <= rand) {
+            minutes += 1;
+            seconds = 30;
+            rand = randMinutes[Math.floor(Math.random() * randMinutes.length)];
+            console.log(rand);
+        }
 
-            if (minutes > 59 && hours != 24)
-                minutes = 59;
-            else if (minutes > 59 && hours == 24)
-                minutes = 0;
-            
-            hours = hours < 10 ? "0" + hours : hours;
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+        if (minutes > 59 && hours != 24)
+            minutes = 59;
+        else if (minutes > 59 && hours == 24)
+            minutes = 0;
 
-            display = $('.headtimer , .boxtimer');
-            display.text(hours + ":" + minutes + ":" + seconds);
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display = $('.headtimer , .boxtimer');
+        display.text(hours + ":" + minutes + ":" + seconds);
 
 
-            if(minutes==0)
-            {
-                hours--;
-                minutes=59;
-                seconds=0;
-            }
-            else if(seconds==0)
-            {
-                seconds=59;
-                minutes--;
-                
-            }
-            else
-            {
-                seconds--;
-            }
-        }, 1000);
+        if (minutes == 0) {
+            hours--;
+            minutes = 59;
+            seconds = 0;
+        }
+        else if (seconds == 0) {
+            seconds = 59;
+            minutes--;
+
+        }
+        else {
+            seconds--;
+        }
+    }, 1000);
     // }
 
     // jQuery(function ($) {
